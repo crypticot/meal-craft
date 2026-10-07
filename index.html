@@ -331,6 +331,25 @@
   .day-strip button.on b { color: #fff; }
   .day-strip button.today b { text-decoration: underline; }
 
+/* Compact meal list in the slot picker */
+  .modal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.9rem; }
+  .modal-head h3 { margin: 0; }
+  .mlist { display: flex; flex-direction: column; gap: 8px; }
+  .mrow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 6px;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    text-align: left;
+  }
+  .mrow:hover { border-color: var(--primary); }
+  .mrow .pic { width: 48px; height: 48px; border-radius: 8px; font-size: 1.2rem; flex-shrink: 0; }
+  .mrow .mtitle { font-size: 0.9rem; }  
+  
   @media (max-width: 760px) {
     .hero { grid-template-columns: 1fr; }
     .hero h2 { font-size: 1.7rem; }
@@ -342,6 +361,9 @@
     .meal-slot { border: 0; background: none; padding: 0; }
     .day-card .pic { height: 90px; }
 	
+  #modal { padding: 28px 18px; }
+    #modalBox { max-height: 70vh; padding: 1.1rem; }    
+    
 	.hero-home {
 	  position: relative;
 	  overflow: hidden;
@@ -366,6 +388,33 @@
 	}
 	.plate-img { width: 100%; }
   }
+  
+  /* Basic animations */
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes bob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  #modal.open { animation: fadeIn 0.2s ease; }
+  #modal.open #modalBox { animation: slideUp 0.25s ease; }
+  .toast { animation: slideUp 0.25s ease; }
+  .plate-wrap { animation: bob 5s ease-in-out infinite; }
+
+  .btn, .mcard, .mrow, .chip, .empty-slot {
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  }
+  .btn:active, .mrow:active, .empty-slot:active { transform: scale(0.97); }
+  button.mcard:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+  
   @media print {
     header, .hero, .tabs, .noprint, #modal, #toasts { display: none !important; }
     body { background: #fff; padding: 0; }
@@ -714,34 +763,34 @@
   }
 
   /* Pick a saved meal for a slot (one-tap planning) */
-  function openSlot(date, slotIndex) {
+function openSlot(date, slotIndex) {
     const slot = state.slots[slotIndex];
     ui.target = { date: date, slot: slot };
     const current = (state.plan[date] || {})[slot];
 
-    const list = sorted(state.meals, "meals", "title").map((m) => `
-      <button class="mcard" data-name="${esc(m.title.toLowerCase())}" onclick="pickMeal('${m.id}')">
+    const list = state.meals.map((m) => `
+      <button class="mrow" data-name="${esc(m.title.toLowerCase())}" onclick="pickMeal('${m.id}')">
         ${pic(mealImg(m), '<i class="fa-solid fa-bowl-food"></i>')}
-        <div class="mbody"><div class="mtitle">${esc(m.title)}</div></div>
+        <div class="mtitle">${esc(m.title)}</div>
       </button>`).join("");
 
     openModal(`
-      <h3>${esc(slot)}, ${pretty(date)}</h3>
+      <div class="modal-head">
+        <h3>${esc(slot)}, ${pretty(date)}</h3>
+        <button class="btn small" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
       <div class="controls">
         <input class="field" id="mealFilter" placeholder="Filter your meals" oninput="filterMeals(this.value)">
         <button class="btn btn-primary small" onclick="openMealEditor(null, true)"><i class="fa-solid fa-plus"></i> New meal</button>
       </div>
-      <div class="grid tight" id="mealPick">
+      <div class="mlist" id="mealPick">
         ${list || '<p class="note">No saved meals yet. Create one with New meal, then reuse it anywhere.</p>'}
       </div>
-      <div class="acts">
-        ${current ? '<button class="btn btn-danger small" onclick="clearSlot()">Leave empty</button>' : ""}
-        <button class="btn small" onclick="closeModal()">Close</button>
-      </div>`);
+      ${current ? '<div class="acts"><button class="btn btn-danger small" onclick="clearSlot()">Leave empty</button></div>' : ""}`);
   }
 
   function filterMeals(q) {
-    document.querySelectorAll("#mealPick .mcard").forEach((el) => {
+    document.querySelectorAll("#mealPick .mrow").forEach((el) => {
       el.style.display = el.dataset.name.includes(q.toLowerCase()) ? "" : "none";
     });
   }
