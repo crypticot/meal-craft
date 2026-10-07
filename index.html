@@ -41,7 +41,6 @@
     z-index: 100;
   }
   .brand { display: flex; align-items: center; gap: 10px; font-size: 1.35rem; font-weight: 800; color: var(--primary); }
-  .nav-actions { display: flex; gap: 8px; flex-wrap: wrap; }
   .container { max-width: 1280px; margin: 0 auto; padding: 1.5rem; }
 
   /* Buttons and fields */
@@ -223,9 +222,104 @@
   #toasts { position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); z-index: 1100; display: flex; flex-direction: column; gap: 8px; }
   .toast { background: var(--ink); color: #fff; padding: 10px 18px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; }
 
+  /* Header nav */
+  .navlinks { display: flex; gap: 6px; }
+  .navlinks button {
+    border: 0;
+    background: none;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: 700;
+    color: var(--muted);
+  }
+  .navlinks button.on { background: var(--primary-light); color: var(--primary); }
+
+  /* Home hero. Change --plate-angle to rotate the plate */
+  :root { --plate-angle: 0deg; }
+  .hero-home { grid-template-columns: 1.1fr 1fr; padding: 2.2rem 0 2.2rem 2.2rem; }
+  .hero-home > div:first-child { padding-right: 2.2rem; }
+  .hero-home .stats { margin-bottom: 1rem; max-width: 420px; }
+  .plate-wrap { display: grid; place-items: center end; }
+  .plate-img {
+    width: min(100%, 360px);
+    transform: rotate(var(--plate-angle));
+    filter: drop-shadow(0 18px 24px rgba(0, 0, 0, 0.18));
+  }
+  .plate-fallback {
+    display: none;
+    font-size: 8rem;
+    place-items: center;
+    transform: rotate(var(--plate-angle));
+  }
+
+  /* Planner week bar and mobile day strip */
+  .weekbar { display: flex; align-items: center; gap: 8px; margin-bottom: 1rem; position: relative; }
+  .weekbar strong { flex: 1; text-align: center; font-size: 0.95rem; }
+  .more-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 110%;
+    z-index: 20;
+    flex-direction: column;
+    gap: 6px;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 8px;
+    box-shadow: var(--shadow);
+  }
+  .more-menu.open { display: flex; }
+  .day-strip { display: none; gap: 6px; margin-bottom: 1rem; }
+  .day-strip button {
+    flex: 1;
+    border: 1px solid var(--border);
+    background: #fff;
+    border-radius: var(--radius-md);
+    padding: 6px 0;
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+  .day-strip button b { display: block; font-size: 1rem; color: var(--ink); }
+  .day-strip button.on { background: var(--primary); border-color: var(--primary); color: #fff; }
+  .day-strip button.on b { color: #fff; }
+  .day-strip button.today b { text-decoration: underline; }
+
   @media (max-width: 760px) {
     .hero { grid-template-columns: 1fr; }
     .hero h1 { font-size: 1.7rem; }
+    .container { padding: 1rem; }
+    .plate-img { width: min(80%, 280px); }
+    .day-strip { display: flex; }
+    .days-grid { grid-template-columns: 1fr; }
+    .day-card:not(.sel) { display: none; }
+    .day-header { display: none; }
+    .meal-slot { border: 0; background: none; padding: 0; }
+    .day-card .pic { height: 90px; }
+	
+	.hero-home {
+	  position: relative;
+	  overflow: hidden;
+	  grid-template-columns: 1fr;
+	  padding: 1.5rem;
+	}
+	.hero-home > div:first-child {
+	  position: relative;
+	  z-index: 1;
+	  padding-right: 0;
+	}
+	.plate-wrap {
+	  position: absolute;
+	  top: 0;
+	  right: 0;
+	  bottom: 0;
+	  width: 75%;
+	  z-index: 0;
+	  opacity: 0.3;
+	  place-items: center end;
+	  pointer-events: none;
+	}
+	.plate-img { width: 100%; }
   }
   @media print {
     header, .hero, .tabs, .noprint, #modal, #toasts { display: none !important; }
@@ -240,11 +334,9 @@
 
 <header>
   <div class="brand"><i class="fa-solid fa-utensils"></i><span>MealCraft</span></div>
-  <div class="nav-actions">
-    <button class="btn" onclick="savePlan()"><i class="fa-solid fa-download"></i> Save plan</button>
-    <button class="btn" onclick="$('importFile').click()"><i class="fa-solid fa-upload"></i> Import plan</button>
-    <button class="btn btn-danger" onclick="resetAll()"><i class="fa-solid fa-trash"></i> Reset</button>
-    <input type="file" id="importFile" accept=".json" hidden onchange="importPlan(this)">
+  <div class="navlinks">
+    <button id="navHome" onclick="showPage('home')">Home</button>
+    <button id="navKitchen" onclick="showPage('kitchen')">Kitchen</button>
   </div>
 </header>
 
@@ -268,12 +360,15 @@
 
   let state = load();
   let ui = {
+    page: "home",
+    dayDate: "",
     view: "planner",
     weekStart: mondayOf(new Date()),
     outFrom: "",
     outTo: "",
     target: null,
     draft: null,
+    pick: null,
     candidates: []
   };
   ui.outFrom = ui.weekStart;
@@ -368,13 +463,29 @@
   }
 
   /* ---------- Page shell ---------- */
+  function showPage(page) {
+    ui.page = page;
+    render();
+    window.scrollTo(0, 0);
+  }
+
   function go(view) {
     ui.view = view;
-    render();
+    showPage("kitchen");
   }
 
   function render() {
-    $("hero").innerHTML = heroHTML();
+    $("navHome").classList.toggle("on", ui.page === "home");
+    $("navKitchen").classList.toggle("on", ui.page === "kitchen");
+
+    if (ui.page === "home") {
+      $("hero").innerHTML = homeHTML();
+      $("tabs").innerHTML = "";
+      $("view").innerHTML = dataHTML();
+      return;
+    }
+
+    $("hero").innerHTML = "";
     $("tabs").innerHTML = TABS.map((t) =>
       '<button class="tab ' + (ui.view === t[0] ? "on" : "") + '" onclick="go(\'' + t[0] + '\')">' + t[1] + "</button>"
     ).join("");
@@ -393,7 +504,7 @@
     return { days: days, meals: meals };
   }
 
-  function heroHTML() {
+  function homeHTML() {
     const st = planStats();
     const today = state.plan[iso(new Date())] || {};
     const chips = state.slots.map((s) => {
@@ -402,22 +513,42 @@
     }).join("");
 
     return `
-      <section class="hero">
+      <section class="hero hero-home">
         <div>
           <h1>Organize Your Taste.</h1>
-          <p>Today's meals at a glance, and one tap to plan the rest.</p>
+          <p>Plan every meal from what you already have.</p>
           <div class="today-row">${chips}</div>
-          <div class="acts" style="margin-top:0">
-            <button class="btn btn-primary" onclick="openMealEditor(null, false)"><i class="fa-solid fa-plus"></i> New meal</button>
+          <div class="stats">
+            <div><h3>${st.days}</h3><p>Days planned</p></div>
+            <div><h3>${st.meals}</h3><p>Meals set</p></div>
+            <div><h3>${state.ingredients.length}</h3><p>Pantry items</p></div>
+          </div>
+          <div class="acts" style="margin-top:6rem">
+            <button class="btn btn-primary" onclick="go('planner')">Plan my week</button>
+            <button class="btn" onclick="openMealEditor(null, false)"><i class="fa-solid fa-plus"></i> New meal</button>
             <button class="btn" onclick="go('pantry'); setTimeout(() => $('newItems').focus(), 50)"><i class="fa-solid fa-carrot"></i> Add ingredients</button>
           </div>
         </div>
-        <div class="stats">
-          <div><h3>${st.days}</h3><p>Days planned</p></div>
-          <div><h3>${st.meals}</h3><p>Meals set</p></div>
-          <div><h3>${state.ingredients.length}</h3><p>Pantry items</p></div>
+        <div class="plate-wrap">
+          <img class="plate-img" src="plate.png" alt="" onerror="this.style.display = 'none'; this.nextElementSibling.style.display = 'grid'">
+          <div class="plate-fallback">🥗</div>
         </div>
       </section>`;
+  }
+
+  function dataHTML() {
+    return `
+      <h2 style="margin-bottom:6px">Your data and settings</h2>
+      <p class="note" style="margin-bottom:1rem">Everything is stored in this browser. Save a copy to keep it safe or move it to another device.</p>
+      <div class="controls">
+        <button class="btn" onclick="savePlan()"><i class="fa-solid fa-download"></i> Save plan</button>
+        <button class="btn" onclick="$('importFile').click()"><i class="fa-solid fa-upload"></i> Import plan</button>
+        <button class="btn btn-danger" onclick="resetAll()"><i class="fa-solid fa-trash"></i> Reset</button>
+        <input type="file" id="importFile" accept=".json" hidden onchange="importPlan(this)">
+      </div>
+      <h2 style="margin:1.5rem 0 6px">Wider picture search (optional)</h2>
+      <p class="note" style="margin-bottom:10px">Paste a free Pexels API key to also search Pexels photos. TheMealDB and Wikipedia work without it.</p>
+      <input class="field" id="pexKey" placeholder="Pexels API key" value="${esc(state.pexelsKey)}" onchange="state.pexelsKey = this.value.trim(); save()">`;
   }
 
   /* ---------- Modal ---------- */
@@ -714,11 +845,9 @@
       <div class="controls">
         <input class="field" id="newItems" placeholder="e.g. avocado, eggs, garri" onkeydown="if (event.key === 'Enter') addFromPantry()">
         <button class="btn btn-primary" onclick="addFromPantry()">Add</button>
+        <button class="btn" onclick="openStarter()"><i class="fa-solid fa-earth-africa"></i> Starter foods</button>
       </div>
-      <div class="grid tight">${cards || '<p class="note">No ingredients yet.</p>'}</div>
-      <h2 style="margin:2rem 0 6px">Wider picture search (optional)</h2>
-      <p class="note" style="margin-bottom:10px">Paste a free Pexels API key to also search Pexels photos. TheMealDB and Wikipedia work without it.</p>
-      <input class="field" id="pexKey" placeholder="Pexels API key" value="${esc(state.pexelsKey)}" onchange="state.pexelsKey = this.value.trim(); save()">`;
+      <div class="grid tight">${cards || '<p class="note">No ingredients yet.</p>'}</div>`;
   }
 
   /* Adds comma-separated names, skipping duplicates. Returns the matching ingredients. */
@@ -972,6 +1101,137 @@
     save();
     render();
     toast("Everything cleared");
+  }
+
+  /* ---------- Starter foods (reads starter-foods.json) ---------- */
+  let starterData = null;
+
+  async function openStarter() {
+    openModal('<h3>Starter foods</h3><p class="note">Loading...</p>');
+    try {
+      if (!starterData) {
+        const res = await fetch("starter-foods.json");
+        if (!res.ok) throw new Error("not found");
+        starterData = await res.json();
+      }
+      showStarter(Object.keys(starterData)[0]);
+    } catch (e) {
+      openModal(`
+        <h3>Starter foods</h3>
+        <p class="note" style="margin-bottom:10px">Could not load starter-foods.json automatically. This happens when the page is opened straight from a folder. Choose the file yourself:</p>
+        <input class="field" type="file" accept=".json" onchange="loadStarterFile(this)">
+        <div class="acts"><button class="btn small" onclick="closeModal()">Close</button></div>`);
+    }
+  }
+
+  function loadStarterFile(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        starterData = JSON.parse(reader.result);
+        showStarter(Object.keys(starterData)[0]);
+      } catch (e) {
+        alert("That file is not valid JSON.");
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  function showStarter(country) {
+    const pack = starterData[country];
+    const options = Object.keys(starterData).map((c) =>
+      "<option " + (c === country ? "selected" : "") + ">" + esc(c) + "</option>"
+    ).join("");
+    const boxes = (kind, list) => (list || []).map((e, i) =>
+      `<label class="chip"><input type="checkbox" data-kind="${kind}" value="${i}" checked> ${esc(e.name || e.title)}</label>`
+    ).join("");
+
+    openModal(`
+      <h3>Starter foods</h3>
+      <select class="field" style="margin-bottom:10px" onchange="showStarter(this.value)">${options}</select>
+      <p class="note">Untick anything you do not want. Meals bring their ingredients into your pantry.</p>
+      <p class="mtitle" style="margin-top:10px">Ingredients</p>
+      <div class="chips">${boxes("ing", pack.ingredients)}</div>
+      <p class="mtitle" style="margin-top:12px">Meals</p>
+      <div class="chips">${boxes("meal", pack.meals)}</div>
+      <label class="note" style="display:block;margin:14px 0">
+        <input type="checkbox" id="starterImgs" checked> Add pictures where the file gives an exact source (you can change any picture later)
+      </label>
+      <div class="acts">
+        <button class="btn btn-primary small" onclick="addStarter('${esc(country)}')">Add selected</button>
+        <button class="btn small" onclick="closeModal()">Cancel</button>
+      </div>`);
+  }
+
+  async function wikiImage(title) {
+    const api = "https://en.wikipedia.org/w/api.php?action=query&redirects=1&prop=pageimages&piprop=thumbnail" +
+      "&pithumbsize=400&format=json&origin=*&titles=" + encodeURIComponent(title);
+    const data = await (await fetch(api)).json();
+    const pages = Object.values((data.query && data.query.pages) || {});
+    return pages[0] && pages[0].thumbnail ? pages[0].thumbnail.source : "";
+  }
+
+  async function toStoredImage(url) {
+    try {
+      return await resizeBlob(await (await fetch(url)).blob());
+    } catch (e) {
+      return url;
+    }
+  }
+
+  async function addStarter(country) {
+    const pack = starterData[country];
+    const wantImages = $("starterImgs").checked;
+    const ticked = (kind) => [...document.querySelectorAll('input[data-kind="' + kind + '"]:checked')]
+      .map((c) => Number(c.value));
+    const ingEntries = ticked("ing").map((i) => pack.ingredients[i]);
+    const mealEntries = ticked("meal").map((i) => pack.meals[i]);
+    const jobs = [];
+
+    const ensureIng = (name) => {
+      let p = state.ingredients.find((x) => x.name.toLowerCase() === name.toLowerCase());
+      if (!p) {
+        p = { id: uid(), name: name, img: "" };
+        state.ingredients.push(p);
+      }
+      const known = pack.ingredients.find((x) => x.name.toLowerCase() === name.toLowerCase());
+      if (known && !jobs.some((j) => j.target === p)) jobs.push({ target: p, entry: known });
+      return p;
+    };
+
+    ingEntries.forEach((e) => ensureIng(e.name));
+
+    mealEntries.forEach((e) => {
+      const ids = (e.items || []).map((name) => ensureIng(name).id);
+      let meal = state.meals.find((m) => m.title.toLowerCase() === e.title.toLowerCase());
+      if (!meal) {
+        meal = { id: uid(), title: e.title, items: ids, img: "" };
+        state.meals.push(meal);
+        jobs.push({ target: meal, entry: e });
+      }
+    });
+
+    save();
+    closeModal();
+    render();
+    toast("Added " + ingEntries.length + " ingredients and " + mealEntries.length + " meals");
+    if (!wantImages) return;
+
+    const todo = jobs.filter((j) => !j.target.img && (j.entry.img || j.entry.wiki));
+    if (!todo.length) return;
+    toast("Fetching pictures...");
+    let got = 0;
+    await Promise.allSettled(todo.map(async (j) => {
+      const url = j.entry.img || (await wikiImage(j.entry.wiki));
+      if (!url) return;
+      j.target.img = await toStoredImage(url);
+      got++;
+    }));
+    save();
+    render();
+    toast("Pictures added for " + got + " of " + todo.length);
   }
 
   render();

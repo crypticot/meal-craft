@@ -1,0 +1,113 @@
+{
+  "Nigeria": {
+    "ingredients": [
+      { "name": "Garri", "wiki": "Gari" },
+      { "name": "Yam", "wiki": "Yam (vegetable)" },
+      { "name": "Plantain", "wiki": "Cooking banana" },
+      { "name": "Cassava", "wiki": "Cassava" },
+      { "name": "Rice", "wiki": "Rice" },
+      { "name": "Beans" },
+      { "name": "Egusi", "wiki": "Egusi" },
+      { "name": "Ogbono" },
+      { "name": "Okra", "wiki": "Okra" },
+      { "name": "Palm oil", "wiki": "Palm oil" },
+      { "name": "Tomato", "wiki": "Tomato" },
+      { "name": "Onion", "wiki": "Onion" },
+      { "name": "Scotch bonnet", "wiki": "Scotch bonnet" },
+      { "name": "Spinach", "wiki": "Spinach" },
+      { "name": "Ugwu leaves" },
+      { "name": "Crayfish" },
+      { "name": "Stockfish", "wiki": "Stockfish" },
+      { "name": "Goat meat", "wiki": "Goat meat" },
+      { "name": "Beef", "wiki": "Beef" },
+      { "name": "Chicken", "wiki": "Chicken as food" },
+      { "name": "Fish" },
+      { "name": "Eggs", "wiki": "Egg as food" },
+      { "name": "Bread", "wiki": "Bread" },
+      { "name": "Banana", "wiki": "Banana" },
+      { "name": "Groundnut", "wiki": "Peanut" },
+      { "name": "Maize", "wiki": "Maize" },
+      { "name": "Oats", "wiki": "Oat" },
+      { "name": "Milk", "wiki": "Milk" },
+      { "name": "Sweet potato", "wiki": "Sweet potato" },
+      { "name": "Irish potato", "wiki": "Potato" },
+      { "name": "Garlic", "wiki": "Garlic" },
+      { "name": "Ginger", "wiki": "Ginger" },
+      { "name": "Spaghetti", "wiki": "Spaghetti" }
+    ],
+    "meals": [
+      {
+        "title": "Jollof rice and chicken",
+        "items": ["Rice", "Tomato", "Onion", "Scotch bonnet", "Chicken"],
+        "wiki": "Jollof rice"
+      },
+      {
+        "title": "Egusi soup and pounded yam",
+        "items": ["Egusi", "Palm oil", "Stockfish", "Goat meat", "Yam", "Onion"],
+        "wiki": "Pounded yam"
+      },
+      {
+        "title": "Moi moi",
+        "items": ["Beans", "Onion", "Scotch bonnet", "Palm oil", "Eggs"],
+        "wiki": "Moin moin"
+      },
+      {
+        "title": "Akara and pap",
+        "items": ["Beans", "Onion", "Scotch bonnet", "Maize"],
+        "wiki": "Akara"
+      },
+      {
+        "title": "Efo riro and eba",
+        "items": ["Spinach", "Palm oil", "Onion", "Scotch bonnet", "Stockfish", "Garri"],
+        "wiki": "Efo riro"
+      },
+      {
+        "title": "Okra soup and eba",
+        "items": ["Okra", "Palm oil", "Stockfish", "Crayfish", "Garri"]
+      },
+      {
+        "title": "Ogbono soup and eba",
+        "items": ["Ogbono", "Palm oil", "Crayfish", "Goat meat", "Garri"]
+      },
+      {
+        "title": "Yam and egg sauce",
+        "items": ["Yam", "Eggs", "Tomato", "Onion", "Scotch bonnet"]
+      },
+      {
+        "title": "Beans and fried plantain",
+        "items": ["Beans", "Plantain", "Palm oil", "Onion"]
+      },
+      {
+        "title": "Suya",
+        "items": ["Beef", "Onion", "Tomato"],
+        "wiki": "Suya"
+      },
+      {
+        "title": "Pepper soup",
+        "items": ["Goat meat", "Scotch bonnet", "Onion", "Ginger"],
+        "wiki": "Pepper soup"
+      },
+      {
+        "title": "Ofada rice and sauce",
+        "items": ["Rice", "Scotch bonnet", "Palm oil", "Onion", "Goat meat"],
+        "wiki": "Ofada rice"
+      },
+      {
+        "title": "Jollof spaghetti",
+        "items": ["Spaghetti", "Tomato", "Onion", "Scotch bonnet"]
+      },
+      {
+        "title": "Bread and eggs",
+        "items": ["Bread", "Eggs"]
+      },
+      {
+        "title": "Roasted plantain and groundnut",
+        "items": ["Plantain", "Groundnut"]
+      },
+      {
+        "title": "Soaked garri and groundnut",
+        "items": ["Garri", "Groundnut", "Milk"]
+      }
+    ]
+  }
+}
