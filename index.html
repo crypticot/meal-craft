@@ -338,8 +338,7 @@
     .plate-img { width: min(80%, 280px); }
     .day-strip { display: flex; }
     .days-grid { grid-template-columns: 1fr; }
-    .day-card:not(.sel) { display: none; }
-    .day-header { display: none; }
+    .days-grid.has-sel .day-card:not(.sel) { display: none; }
     .meal-slot { border: 0; background: none; padding: 0; }
     .day-card .pic { height: 90px; }
 	
@@ -420,7 +419,7 @@
     page: "home",
     dayDate: "",
     view: "planner",
-    weekStart: mondayOf(new Date()),
+    weekStart: sundayOf(new Date()),
     outFrom: "",
     outTo: "",
     target: null,
@@ -482,9 +481,9 @@
     return iso(d);
   }
 
-  function mondayOf(date) {
+  function sundayOf(date) {
     const d = new Date(date);
-    d.setDate(d.getDate() - ((d.getDay() + 6) % 7));
+    d.setDate(d.getDate() - d.getDay());
     return iso(d);
   }
 
@@ -631,6 +630,14 @@
     const today = iso(new Date());
     const days = [];
     for (let i = 0; i < 7; i++) days.push(addDays(ui.weekStart, i));
+    if (!days.includes(ui.dayDate)) ui.dayDate = "";
+
+    const strip = days.map((d) => {
+      const dt = parse(d);
+      return `<button class="${d === ui.dayDate ? "on" : ""} ${d === today ? "today" : ""}" onclick="ui.dayDate = ui.dayDate === '${d}' ? '' : '${d}'; render()">
+        ${dt.toLocaleDateString(undefined, { weekday: "short" })}<b>${dt.getDate()}</b>
+      </button>`;
+    }).join("");
 
     const cards = days.map((date) => {
       const slots = state.slots.map((s, i) => {
@@ -643,7 +650,7 @@
           : `<button class="empty-slot" onclick="openSlot('${date}', ${i})">+ Add ${esc(s)}</button>`;
         return `<div class="meal-slot"><div class="slot-label">${esc(s)}</div>${body}</div>`;
       }).join("");
-      return `<div class="day-card ${date === today ? "is-today" : ""}">
+      return `<div class="day-card ${date === today ? "is-today" : ""} ${date === ui.dayDate ? "sel" : ""}">
         <div class="day-header">${pretty(date)}</div><div class="meal-slots">${slots}</div></div>`;
     }).join("");
 
@@ -656,7 +663,8 @@
         <button class="btn small" onclick="copyWeek()"><i class="fa-regular fa-copy"></i> Copy to next week</button>
         <button class="btn small" onclick="openSlots()"><i class="fa-solid fa-gear"></i> Edit slots</button>
       </div>
-      <div class="days-grid">${cards}</div>`;
+      <div class="day-strip">${strip}</div>
+      <div class="days-grid ${ui.dayDate ? "has-sel" : ""}">${cards}</div>`;
   }
 
   function shiftWeek(n) {
