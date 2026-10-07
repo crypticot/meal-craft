@@ -4,6 +4,48 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>MealCraft - Personal Meal Planner</title>
+
+<meta name="description" content="MealCraft is a free personal meal planner. Build meals from your pantry, plan your week, and print or download your meal plan.">
+<link rel="canonical" href="https://crypticot.github.io/meal-craft/">
+<meta name="theme-color" content="#10b981">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MealCraft">
+<meta property="og:title" content="MealCraft - Personal Meal Planner">
+<meta property="og:description" content="Plan every meal from what you already have. Build meals from your pantry and plan your week.">
+<meta property="og:url" content="https://crypticot.github.io/meal-craft/">
+<meta property="og:image" content="https://crypticot.github.io/meal-craft/og-image.jpg">
+<meta property="og:locale" content="en_US">
+
+<!-- Twitter / X -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="MealCraft - Personal Meal Planner">
+<meta name="twitter:description" content="Plan every meal from what you already have.">
+<meta name="twitter:image" content="https://crypticot.github.io/meal-craft/og-image.jpg">
+<!-- <meta name="twitter:site" content="@yourhandle"> -->
+
+<!-- Icons and manifest -->
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+
+<!-- Structured data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "MealCraft",
+  "description": "A personal meal planner that builds meals from your pantry.",
+  "url": "https://crypticot.github.io/meal-craft/",
+  "applicationCategory": "LifestyleApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+}
+</script>
+
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -88,7 +130,7 @@
     gap: 1.5rem;
     align-items: center;
   }
-  .hero h1 { font-size: 2.1rem; font-weight: 800; color: #065f46; margin-bottom: 0.4rem; }
+  .hero h2 { font-size: 2.1rem; font-weight: 800; color: #065f46; margin-bottom: 0.4rem; }
   .hero p { color: #047857; margin-bottom: 0.9rem; }
   .today-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1rem; }
   .tchip {
@@ -287,7 +329,7 @@
 
   @media (max-width: 760px) {
     .hero { grid-template-columns: 1fr; }
-    .hero h1 { font-size: 1.7rem; }
+    .hero h2 { font-size: 1.7rem; }
     .container { padding: 1rem; }
     .plate-img { width: min(80%, 280px); }
     .day-strip { display: flex; }
@@ -328,9 +370,20 @@
     .grid { grid-template-columns: repeat(3, 1fr); }
     .mcard { break-inside: avoid; }
   }
+  
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
 </style>
 </head>
 <body>
+
+<h1 class="sr-only">MealCraft: Personal Meal Planner</h1>
 
 <header>
   <div class="brand"><i class="fa-solid fa-utensils"></i><span>MealCraft</span></div>
@@ -515,7 +568,7 @@
     return `
       <section class="hero hero-home">
         <div>
-          <h1>Organize Your Taste.</h1>
+          <h2>Organize Your Taste.</h2>
           <p>Plan every meal from what you already have.</p>
           <div class="today-row">${chips}</div>
           <div class="stats">
