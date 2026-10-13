@@ -50,379 +50,529 @@
 }
 </script>
 
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@400;500;600;700&family=Gabarito:wght@600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
   :root {
-    --bg: #f8fafc;
-    --card: #ffffff;
-    --primary: #10b981;
-    --primary-hover: #059669;
-    --primary-light: #ecfdf5;
-    --ink: #0f172a;
-    --muted: #64748b;
-    --border: #e2e8f0;
-    --radius-lg: 16px;
-    --radius-md: 10px;
-    --shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.06);
+    --paper: #EDF1E6;
+    --surface: #FAFBF6;
+    --surface-2: #E1E8D7;
+    --ink: #13261D;
+    --muted: #55695C;
+    --forest: #0F3325;
+    --forest-2: #174A36;
+    --leaf: #17855A;
+    --leaf-hover: #116947;
+    --leaf-soft: #DCEFE2;
+    --turmeric: #F2B53C;
+    --danger: #B9382B;
+    --line: rgba(19, 38, 29, 0.13);
+
+    --r-s: 10px;
+    --r-m: 12px;
+    --r-l: 18px;
+
+    --shadow: 0 1px 2px rgba(15, 51, 37, 0.06), 0 8px 18px rgba(15, 51, 37, 0.07), 0 22px 40px rgba(15, 51, 37, 0.06);
+    --ease: cubic-bezier(0.22, 0.7, 0.18, 1);
+    --spring: cubic-bezier(0.2, 1.25, 0.4, 1);
+
+    --display: "Gabarito", "Helvetica Neue", Arial, sans-serif;
+    --body: "Albert Sans", "Helvetica Neue", Arial, sans-serif;
+
+    /* Change --plate-angle to rotate the plate */
+    --plate-angle: 0deg;
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Plus Jakarta Sans", system-ui, sans-serif; }
-  body { background: var(--bg); color: var(--ink); padding-bottom: 60px; }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 16px;
+    line-height: 1.55;
+    padding-bottom: 60px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  button, input, select { font-family: inherit; }
   button { cursor: pointer; }
   img { display: block; }
+  :focus-visible { outline: 3px solid var(--turmeric); outline-offset: 2px; }
 
-  /* Header */
+  h2, h3 { font-family: var(--display); letter-spacing: -0.02em; line-height: 1.1; }
+  h2 { font-size: 1.5rem; font-weight: 700; }
+
+  /* ---------- Header ---------- */
   header {
-    background: var(--card);
-    border-bottom: 1px solid var(--border);
-    padding: 0.9rem 1.5rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 10px;
     flex-wrap: wrap;
-    position: sticky;
-    top: 0;
-    z-index: 100;
+    padding: 0.8rem 1.5rem;
+    background: rgba(237, 241, 230, 0.86);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--line);
   }
-  .brand { display: flex; align-items: center; gap: 10px; font-size: 1.35rem; font-weight: 800; color: var(--primary); }
-  .container { max-width: 1280px; margin: 0 auto; padding: 1.5rem; }
-
-  /* Buttons and fields */
-  .btn {
-    padding: 0.6rem 1.1rem;
-    border-radius: var(--radius-md);
-    border: 1px solid var(--border);
-    background: #fff;
-    color: var(--ink);
-    font-weight: 600;
-    font-size: 0.88rem;
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-  }
-  .btn:hover { background: #f1f5f9; }
-  .btn-primary { background: var(--primary); color: #fff; border-color: var(--primary); }
-  .btn-primary:hover { background: var(--primary-hover); }
-  .btn-danger { color: #ef4444; border-color: #fca5a5; }
-  .btn-danger:hover { background: #fef2f2; }
-  .small { padding: 0.35rem 0.8rem; font-size: 0.8rem; }
-  .field {
-    width: 100%;
-    padding: 0.7rem;
-    border-radius: var(--radius-md);
-    border: 1px solid var(--border);
-    font-size: 0.95rem;
-    outline: none;
-  }
-  .field:focus { border-color: var(--primary); }
-  .controls { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 1.2rem; }
-  .controls .field { flex: 1; min-width: 160px; width: auto; }
-  .note { font-size: 0.82rem; color: var(--muted); }
-  h2 { font-size: 1.35rem; }
-
-  /* Hero */
-  .hero {
-    background: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%);
-    border: 1px solid #a7f3d0;
-    border-radius: var(--radius-lg);
-    padding: 1.8rem;
-    margin-bottom: 1.8rem;
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 1.5rem;
-    align-items: center;
-  }
-  .hero h2 { font-size: 2.1rem; font-weight: 800; color: #065f46; margin-bottom: 0.4rem; }
-  .hero p { color: #047857; margin-bottom: 0.9rem; }
-  .today-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1rem; }
-  .tchip {
-    background: #fff;
-    border-radius: 20px;
-    padding: 5px 12px;
-    font-size: 0.8rem;
-    color: var(--muted);
-    box-shadow: var(--shadow);
-  }
-  .tchip b { color: var(--ink); }
-  .stats {
-    background: #fff;
-    padding: 1.2rem;
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow);
+  .brand {
     display: flex;
-    justify-content: space-around;
-    text-align: center;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--display);
+    font-size: 1.4rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--forest);
   }
-  .stats h3 { font-size: 1.6rem; color: var(--primary); font-weight: 800; }
-  .stats p { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin: 0; }
-
-  /* Tabs */
-  .tabs { display: flex; gap: 6px; margin-bottom: 1.4rem; border-bottom: 2px solid var(--border); overflow-x: auto; }
-  .tab {
-    padding: 0.6rem 1.1rem;
-    background: none;
-    border: none;
-    border-bottom: 3px solid transparent;
-    margin-bottom: -2px;
-    font-weight: 700;
-    color: var(--muted);
-    white-space: nowrap;
-  }
-  .tab.on { color: var(--primary); border-bottom-color: var(--primary); }
-
-  /* Planner */
-  .days-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.3rem; }
-  .day-card { background: var(--card); border-radius: var(--radius-lg); border: 1px solid var(--border); box-shadow: var(--shadow); overflow: hidden; }
-  .day-header { background: #f8fafc; padding: 0.9rem 1.2rem; border-bottom: 1px solid var(--border); font-weight: 700; }
-  .day-card.is-today .day-header { background: var(--primary); color: #fff; }
-  .meal-slots { padding: 0.9rem; display: flex; flex-direction: column; gap: 0.9rem; }
-  .meal-slot { border: 1px dashed var(--border); border-radius: var(--radius-md); padding: 0.7rem; background: #fafafa; }
-  .slot-label { font-size: 0.72rem; font-weight: 800; text-transform: uppercase; color: var(--primary); margin-bottom: 0.45rem; }
-  .empty-slot {
-    width: 100%;
-    padding: 0.7rem;
-    background: transparent;
-    border: 1px dashed #cbd5e1;
-    border-radius: 8px;
-    color: var(--muted);
-    font-weight: 600;
-    font-size: 0.85rem;
-  }
-  .empty-slot:hover { background: #fff; border-color: var(--primary); color: var(--primary); }
-
-  /* Meal cards (planner, library, output) */
-  .mcard {
-    background: #fff;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    overflow: hidden;
-    text-align: left;
-    width: 100%;
-    display: block;
-  }
-  button.mcard:hover { border-color: var(--primary); }
-  .pic {
-    width: 100%;
-    height: 120px;
-    object-fit: cover;
-    background: var(--primary-light);
+  .brand i {
+    width: 36px;
+    height: 36px;
     display: grid;
     place-items: center;
-    font-size: 2.2rem;
-    color: var(--primary);
+    border-radius: var(--r-s);
+    background: var(--forest);
+    color: var(--turmeric);
+    font-size: 0.95rem;
+    box-shadow: 0 6px 14px rgba(15, 51, 37, 0.25);
   }
-  .mbody { padding: 0.7rem 0.8rem 0.8rem; }
-  .mtitle { font-weight: 700; font-size: 0.95rem; }
-  .mhead { background: #f1f5f9; padding: 0.55rem 0.9rem; font-weight: 800; font-size: 0.85rem; border-bottom: 1px solid var(--border); }
-  .chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 0.45rem; }
-  .chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    background: var(--primary-light);
-    color: #047857;
-    border: 1.5px solid transparent;
-    border-radius: 16px;
-    padding: 2px 10px 2px 3px;
-    font-size: 0.74rem;
-    font-weight: 600;
+  .navlinks {
+    display: flex;
+    gap: 4px;
+    padding: 4px;
+    background: var(--surface-2);
+    border-radius: 999px;
   }
-  .chip img, .chip .dot { width: 20px; height: 20px; border-radius: 50%; object-fit: cover; background: #fff; }
-  button.chip { font-size: 0.82rem; background: #f1f5f9; color: var(--ink); }
-  button.chip.sel { background: var(--primary-light); border-color: var(--primary); color: #047857; }
-  .acts { display: flex; gap: 6px; margin-top: 0.7rem; flex-wrap: wrap; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.1rem; }
-  .grid.tight { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
-  .grid.tight .pic { height: 90px; }
-
-  /* Modal and toast */
-  #modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(15, 23, 42, 0.5);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    padding: 14px;
-    z-index: 1000;
-  }
-  #modal.open { display: flex; }
-  #modalBox {
-    background: #fff;
-    border-radius: var(--radius-lg);
-    width: 100%;
-    max-width: 560px;
-    max-height: 90vh;
-    overflow-y: auto;
-    padding: 1.4rem;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.12);
-  }
-  #modalBox h3 { margin-bottom: 0.9rem; }
-  .results { display: grid; grid-template-columns: repeat(auto-fill, minmax(105px, 1fr)); gap: 8px; margin: 0.8rem 0; }
-  .res { border: 2px solid var(--border); border-radius: 8px; background: #fff; overflow: hidden; text-align: left; padding: 0; }
-  .res:hover { border-color: var(--primary); }
-  .res img { width: 100%; height: 80px; object-fit: cover; }
-  .res span { display: block; padding: 4px 6px; font-size: 0.68rem; color: var(--muted); }
-  #toasts { position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); z-index: 1100; display: flex; flex-direction: column; gap: 8px; }
-  .toast { background: var(--ink); color: #fff; padding: 10px 18px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; }
-
-  /* Header nav */
-  .navlinks { display: flex; gap: 6px; }
   .navlinks button {
     border: 0;
     background: none;
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    font-weight: 700;
+    padding: 0.45rem 1.1rem;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.92rem;
     color: var(--muted);
+    transition: background 0.3s var(--ease), color 0.3s var(--ease);
   }
-  .navlinks button.on { background: var(--primary-light); color: var(--primary); }
+  .navlinks button:hover { color: var(--ink); }
+  .navlinks button.on { background: var(--forest); color: #fff; }
 
-  /* Home hero. Change --plate-angle to rotate the plate */
-  :root { --plate-angle: 0deg; }
-  .hero-home { grid-template-columns: 1.1fr 1fr; padding: 2.2rem 0 2.2rem 2.2rem; }
-  .hero-home > div:first-child { padding-right: 2.2rem; }
-  .hero-home .stats { margin-bottom: 1rem; max-width: 420px; }
-  .plate-wrap { display: grid; place-items: center end; }
+  .container { max-width: 1280px; margin: 0 auto; padding: 1.6rem; }
+
+  /* ---------- Buttons and fields ---------- */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0.62rem 1.15rem;
+    border-radius: 999px;
+    border: 1.5px solid var(--line);
+    background: var(--surface);
+    color: var(--ink);
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: background 0.25s, border-color 0.25s, transform 0.25s var(--spring);
+  }
+  .btn:hover { background: #fff; border-color: rgba(19, 38, 29, 0.32); }
+  .btn:active { transform: scale(0.97); }
+  .btn-primary { background: var(--leaf); border-color: var(--leaf); color: #fff; }
+  .btn-primary:hover { background: var(--leaf-hover); border-color: var(--leaf-hover); }
+  .btn-danger { color: var(--danger); border-color: rgba(185, 56, 43, 0.35); background: transparent; }
+  .btn-danger:hover { background: rgba(185, 56, 43, 0.08); border-color: var(--danger); }
+  .small { padding: 0.38rem 0.9rem; font-size: 0.82rem; }
+
+  .field {
+    width: 100%;
+    padding: 0.72rem 0.95rem;
+    border-radius: var(--r-s);
+    border: 1.5px solid var(--line);
+    background: var(--surface);
+    color: var(--ink);
+    font-size: 0.97rem;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .field::placeholder { color: #8A9B8F; }
+  .field:focus { border-color: var(--leaf); box-shadow: 0 0 0 4px rgba(23, 133, 90, 0.16); }
+  select.field { appearance: none; -webkit-appearance: none; }
+
+  .controls { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 1.2rem; }
+  .controls .field { flex: 1; min-width: 160px; width: auto; }
+  .controls strong { font-family: var(--display); font-size: 1.05rem; font-weight: 700; }
+  .note { font-size: 0.86rem; color: var(--muted); }
+
+  /* ---------- Home hero ---------- */
+  .hero {
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 1.5rem;
+    align-items: center;
+    min-height: 470px;
+    margin-bottom: 2.2rem;
+    padding: 3rem 0 3rem 3rem;
+    border-radius: var(--r-l);
+    color: #EAF3EA;
+    background:
+      radial-gradient(circle at 82% 45%, rgba(242, 181, 60, 0.2), transparent 46%),
+      linear-gradient(140deg, var(--forest-2) 0%, var(--forest) 70%);
+    box-shadow: var(--shadow);
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: 0.09;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/></filter><rect width='160' height='160' filter='url(%23n)'/></svg>");
+  }
+  .hero > div:first-child { position: relative; z-index: 1; padding-right: 2rem; }
+  .hero h2 {
+    max-width: 12ch;
+    margin-bottom: 0.7rem;
+    font-size: clamp(2.4rem, 5.2vw, 4rem);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 0.98;
+    color: #F6F9F0;
+    animation: reveal 1.1s var(--ease) both;
+  }
+  .hero p { max-width: 38ch; margin-bottom: 1.2rem; color: #B9D2C2; font-size: 1.05rem; animation: fadein 1s 0.35s both; }
+  @keyframes reveal { from { clip-path: inset(0 0 100% 0); transform: translateY(24px); } to { clip-path: inset(0); transform: none; } }
+  @keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+
+  .today-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1.4rem; }
+  .tchip {
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.07);
+    font-size: 0.82rem;
+    color: #BFD6C8;
+  }
+  .tchip b { color: #fff; font-weight: 600; }
+
+  .stats {
+    display: flex;
+    max-width: 440px;
+    margin-bottom: 1.4rem;
+    padding: 0.9rem 0.4rem;
+    border-radius: var(--r-m);
+    background: var(--surface);
+    color: var(--ink);
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.18), 0 16px 32px rgba(0, 0, 0, 0.22);
+  }
+  .stats > div { flex: 1; padding: 0.2rem 0.6rem; }
+  .stats > div + div { border-left: 1px solid var(--line); }
+  .stats h3 { font-size: 2rem; font-weight: 800; color: var(--forest); }
+  .stats p { margin: 0; max-width: none; font-size: 0.8rem; color: var(--muted); animation: none; }
+
+  .hero .acts { margin-top: 1.4rem !important; gap: 10px; }
+  .hero .btn { border-color: rgba(255, 255, 255, 0.3); background: transparent; color: #EAF3EA; }
+  .hero .btn:hover { background: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.55); }
+  .hero .btn-primary { background: var(--turmeric); border-color: var(--turmeric); color: #2A1C02; }
+  .hero .btn-primary:hover { background: #FFC85A; border-color: #FFC85A; }
+
+  .plate-wrap { position: relative; display: grid; place-items: center end; align-self: stretch; }
+  .plate-wrap::before, .plate-wrap::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: -6%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+
   .plate-img {
-    width: min(100%, 360px);
+    position: relative;
+    z-index: 1;
+    width: min(100%, 420px);
+    margin-right: -9%;
     transform: rotate(var(--plate-angle));
-    filter: drop-shadow(0 18px 24px rgba(0, 0, 0, 0.18));
+    filter: drop-shadow(0 22px 28px rgba(0, 0, 0, 0.35));
+    animation:
+      serve 1.6s 0.2s var(--spring) both,
+      pulse 6s 1.8s ease-in-out infinite;
+  }
+  @keyframes serve {
+    from { opacity: 0; transform: rotate(calc(var(--plate-angle) - 50deg)) scale(0.8) translateX(60px); }
+    to { opacity: 1; transform: rotate(var(--plate-angle)); }
+  }
+  @keyframes pulse {
+    0%, 100% { transform: rotate(var(--plate-angle)) scale(1); }
+    50% { transform: rotate(var(--plate-angle)) scale(1.06); }
   }
   .plate-fallback {
     display: none;
+    position: relative;
+    z-index: 1;
     font-size: 8rem;
     place-items: center;
     transform: rotate(var(--plate-angle));
   }
 
-  /* Planner week bar and mobile day strip */
-  .weekbar { display: flex; align-items: center; gap: 8px; margin-bottom: 1rem; position: relative; }
-  .weekbar strong { flex: 1; text-align: center; font-size: 0.95rem; }
-  .more-menu {
-    display: none;
-    position: absolute;
-    right: 0;
-    top: 110%;
-    z-index: 20;
-    flex-direction: column;
-    gap: 6px;
-    background: #fff;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    padding: 8px;
+  /* ---------- Tabs ---------- */
+  .tabs {
+    display: inline-flex;
+    max-width: 100%;
+    gap: 4px;
+    margin-bottom: 1.6rem;
+    padding: 5px;
+    border-radius: 999px;
+    background: var(--surface-2);
+    overflow-x: auto;
+  }
+  .tab {
+    padding: 0.55rem 1.25rem;
+    border: 0;
+    border-radius: 999px;
+    background: none;
+    font-weight: 600;
+    font-size: 0.92rem;
+    color: var(--muted);
+    white-space: nowrap;
+    transition: background 0.3s var(--ease), color 0.3s var(--ease);
+  }
+  .tab:hover { color: var(--ink); }
+  .tab.on { background: var(--forest); color: #fff; box-shadow: 0 6px 14px rgba(15, 51, 37, 0.25); }
+
+  /* ---------- Planner ---------- */
+  .days-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.4rem; }
+  .day-card {
+    overflow: hidden;
+    border-radius: var(--r-l);
+    background: var(--surface);
+    border: 1px solid var(--line);
     box-shadow: var(--shadow);
   }
-  .more-menu.open { display: flex; }
-  .day-strip { display: none; gap: 6px; margin-bottom: 1rem; }
-  .day-strip button {
-    flex: 1;
-    border: 1px solid var(--border);
-    background: #fff;
-    border-radius: var(--radius-md);
-    padding: 6px 0;
-    font-size: 0.72rem;
-    color: var(--muted);
+  .day-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.3rem;
+    font-family: var(--display);
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    background: var(--surface-2);
   }
-  .day-strip button b { display: block; font-size: 1rem; color: var(--ink); }
-  .day-strip button.on { background: var(--primary); border-color: var(--primary); color: #fff; }
-  .day-strip button.on b { color: #fff; }
-  .day-strip button.today b { text-decoration: underline; }
-
-/* Compact meal list in the slot picker */
-  .modal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.9rem; }
-  .modal-head h3 { margin: 0; }
-  .mlist { display: flex; flex-direction: column; gap: 8px; }
-  .mrow {
+  .day-card.is-today .day-header { background: var(--forest); color: #fff; }
+  .day-card.is-today .day-header::after {
+    content: "Today";
+    padding: 3px 12px;
+    border-radius: 999px;
+    background: var(--turmeric);
+    color: #2A1C02;
+    font-family: var(--body);
+    font-size: 0.76rem;
+    font-weight: 700;
+  }
+  .meal-slots { display: flex; flex-direction: column; gap: 0.8rem; padding: 1rem; }
+  .meal-slot { padding: 0.75rem; border-radius: var(--r-m); background: var(--paper); }
+  .slot-label {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 8px;
+    margin-bottom: 0.5rem;
+    font-size: 0.86rem;
+    font-weight: 700;
+    color: var(--forest);
+  }
+  .slot-label::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: var(--leaf); }
+  .meal-slot:nth-child(1) .slot-label::before { background: var(--turmeric); }
+  .meal-slot:nth-child(3) .slot-label::before { background: var(--forest); }
+  .empty-slot {
     width: 100%;
-    padding: 6px;
-    background: #fff;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
+    padding: 0.8rem;
+    border: 1.5px dashed rgba(19, 38, 29, 0.25);
+    border-radius: var(--r-s);
+    background: transparent;
+    font-weight: 600;
+    font-size: 0.88rem;
+    color: var(--muted);
+    transition: all 0.25s var(--ease);
+  }
+  .empty-slot:hover { border-color: var(--leaf); border-style: solid; background: var(--surface); color: var(--leaf); }
+
+  /* ---------- Meal cards (planner, library, output, pantry) ---------- */
+  .mcard {
+    display: block;
+    width: 100%;
+    overflow: hidden;
     text-align: left;
+    border-radius: var(--r-m);
+    border: 1px solid var(--line);
+    background: var(--surface);
+    box-shadow: 0 1px 2px rgba(15, 51, 37, 0.05), 0 6px 14px rgba(15, 51, 37, 0.05);
   }
-  .mrow:hover { border-color: var(--primary); }
-  .mrow .pic { width: 48px; height: 48px; border-radius: 8px; font-size: 1.2rem; flex-shrink: 0; }
-  .mrow .mtitle { font-size: 0.9rem; }  
-  
+  button.mcard { transition: border-color 0.25s, box-shadow 0.35s var(--ease); }
+  button.mcard:hover { border-color: var(--leaf); box-shadow: var(--shadow); }
+  .pic {
+    width: 100%;
+    height: 130px;
+    display: grid;
+    place-items: center;
+    object-fit: cover;
+    font-family: var(--display);
+    font-size: 2.4rem;
+    font-weight: 800;
+    color: var(--leaf);
+    background:
+      radial-gradient(circle, rgba(23, 133, 90, 0.18) 0 2px, transparent 3px) 0 0 / 16px 16px,
+      linear-gradient(145deg, #E3EEDA, #CFE2CC);
+    transition: transform 0.9s var(--ease);
+  }
+  .mcard { isolation: isolate; }
+  button.mcard:hover .pic { transform: scale(1.05); }
+  .mbody { position: relative; padding: 0.75rem 0.9rem 0.9rem; background: var(--surface); }
+  .mtitle { font-family: var(--display); font-size: 1.02rem; font-weight: 700; letter-spacing: -0.01em; }
+  .mhead {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0.6rem 0.95rem;
+    background: var(--forest);
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.86rem;
+  }
+  .mhead::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--turmeric); }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 0.5rem; }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 2px 11px 2px 3px;
+    border-radius: 999px;
+    border: 1.5px solid transparent;
+    background: var(--leaf-soft);
+    color: #0F5A3B;
+    font-size: 0.76rem;
+    font-weight: 600;
+  }
+  .chip img, .chip .dot { width: 20px; height: 20px; border-radius: 50%; object-fit: cover; background: #fff; }
+  .chip input { accent-color: var(--leaf); margin-left: 8px; }
+  button.chip { padding-right: 12px; background: var(--paper); border-color: var(--line); color: var(--ink); font-size: 0.84rem; transition: all 0.25s var(--spring); }
+  button.chip:hover { border-color: var(--leaf); }
+  button.chip.sel { background: var(--leaf); border-color: var(--leaf); color: #fff; }
+
+  .acts { display: flex; gap: 6px; margin-top: 0.75rem; flex-wrap: wrap; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 1.2rem; }
+  .grid.tight { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+  .grid.tight .pic { height: 92px; }
+
+  /* ---------- Modal and toast ---------- */
+  #modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 14px;
+    background: rgba(10, 30, 21, 0.55);
+    backdrop-filter: blur(5px);
+  }
+  #modal.open { display: flex; animation: fadein 0.3s both; }
+  #modalBox {
+    width: 100%;
+    max-width: 580px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 1.6rem;
+    border-radius: var(--r-l);
+    background: var(--surface);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+  }
+  #modal.open #modalBox { animation: pop 0.5s var(--spring) both; }
+  @keyframes pop { from { opacity: 0; transform: translateY(24px) scale(0.95); } to { opacity: 1; transform: none; } }
+  #modalBox h3 { margin-bottom: 1rem; font-size: 1.45rem; font-weight: 700; }
+
+  .results { display: grid; grid-template-columns: repeat(auto-fill, minmax(105px, 1fr)); gap: 8px; margin: 0.8rem 0; }
+  .res {
+    padding: 0;
+    overflow: hidden;
+    text-align: left;
+    border-radius: var(--r-s);
+    border: 2px solid var(--line);
+    background: var(--surface);
+    transition: border-color 0.2s;
+  }
+  .res:hover { border-color: var(--leaf); }
+  .res img { width: 100%; height: 80px; object-fit: cover; }
+  .res span { display: block; padding: 4px 7px; font-size: 0.7rem; color: var(--muted); }
+
+  #toasts { position: fixed; bottom: 20px; left: 50%; z-index: 1100; display: flex; flex-direction: column; gap: 8px; transform: translateX(-50%); }
+  .toast {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 20px;
+    border-radius: 999px;
+    background: var(--forest);
+    color: #fff;
+    font-size: 0.88rem;
+    font-weight: 600;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+    animation: pop 0.45s var(--spring) both;
+  }
+  .toast::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--turmeric); }
+
+  /* ---------- Scroll-driven motion (progressive, ignored where unsupported) ---------- */
+  @supports (animation-timeline: view()) {
+    .day-card, .grid > .mcard {
+      animation: unveil linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 35%;
+    }
+    .plate-wrap {
+      animation: drift linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 500px;
+    }
+  }
+  @keyframes unveil { from { clip-path: inset(14% 0 0 0 round var(--r-m)); opacity: 0.4; } to { clip-path: inset(0 round var(--r-m)); opacity: 1; } }
+  @keyframes drift { to { transform: translateY(40px); } }
+
+  /* ---------- Phones ---------- */
   @media (max-width: 760px) {
-    .hero { grid-template-columns: 1fr; }
-    .hero h2 { font-size: 1.7rem; }
+    header { padding: 0.7rem 1rem; }
     .container { padding: 1rem; }
-    .plate-img { width: min(80%, 280px); }
-    .day-strip { display: flex; }
     .days-grid { grid-template-columns: 1fr; }
-    .days-grid.has-sel .day-card:not(.sel) { display: none; }
-    .meal-slot { border: 0; background: none; padding: 0; }
-    .day-card .pic { height: 90px; }
-	
-  #modal { padding: 28px 18px; }
-    #modalBox { max-height: 70vh; padding: 1.1rem; }    
-    
-	.hero-home {
-	  position: relative;
-	  overflow: hidden;
-	  grid-template-columns: 1fr;
-	  padding: 1.5rem;
-	}
-	.hero-home > div:first-child {
-	  position: relative;
-	  z-index: 1;
-	  padding-right: 0;
-	}
-	.plate-wrap {
-	  position: absolute;
-	  top: 0;
-	  right: 0;
-	  bottom: 0;
-	  width: 75%;
-	  z-index: 0;
-	  opacity: 0.3;
-	  place-items: center end;
-	  pointer-events: none;
-	}
-	.plate-img { width: 100%; }
-  }
-  
-  /* Basic animations */
-  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-  @keyframes slideUp {
-    from { opacity: 0; transform: translateY(18px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes bob {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-8px); }
+    .hero h2 { font-size: 2.4rem; }
+    .hero { grid-template-columns: 1fr; min-height: 0; padding: 1.8rem 1.4rem; }
+    .hero > div:first-child { padding-right: 0; }
+    .plate-wrap {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 75%;
+      z-index: 0;
+      opacity: 0.28;
+      pointer-events: none;
+    }
+    .plate-img { width: 100%; margin-right: -12%; }
   }
 
-  #modal.open { animation: fadeIn 0.2s ease; }
-  #modal.open #modalBox { animation: slideUp 0.25s ease; }
-  .toast { animation: slideUp 0.25s ease; }
-  .plate-wrap { animation: bob 5s ease-in-out infinite; }
-
-  .btn, .mcard, .mrow, .chip, .empty-slot {
-    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
-  }
-  .btn:active, .mrow:active, .empty-slot:active { transform: scale(0.97); }
-  button.mcard:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
-
-  @media (prefers-reduced-motion: reduce) {
-    * { animation: none !important; transition: none !important; }
-  }
-  
   @media print {
     header, .hero, .tabs, .noprint, #modal, #toasts { display: none !important; }
     body { background: #fff; padding: 0; }
     .container { padding: 0; }
     .grid { grid-template-columns: repeat(3, 1fr); }
-    .mcard { break-inside: avoid; }
+    .mcard { break-inside: avoid; box-shadow: none; animation: none; clip-path: none; }
   }
-  
+
   .sr-only {
     position: absolute;
     width: 1px;
@@ -431,6 +581,11 @@
     clip: rect(0, 0, 0, 0);
     white-space: nowrap;
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+  }
+
 </style>
 </head>
 <body>
@@ -474,7 +629,7 @@
     target: null,
     draft: null,
     pick: null,
-    sort: { pantry: 0, meals: 0 },
+	sort: { pantry: 0, meals: 0 },
     candidates: []
   };
   ui.outFrom = ui.weekStart;
@@ -567,7 +722,7 @@
   function mealChips(m) {
     return '<div class="chips">' + m.items.map(getIng).filter(Boolean).map(chip).join("") + "</div>";
   }
-
+  
   const SORTS = [
     { icon: "fa-sort", label: "Added order" },
     { icon: "fa-arrow-down-a-z", label: "A to Z" },
@@ -707,14 +862,6 @@
     const today = iso(new Date());
     const days = [];
     for (let i = 0; i < 7; i++) days.push(addDays(ui.weekStart, i));
-    if (!days.includes(ui.dayDate)) ui.dayDate = "";
-
-    const strip = days.map((d) => {
-      const dt = parse(d);
-      return `<button class="${d === ui.dayDate ? "on" : ""} ${d === today ? "today" : ""}" onclick="ui.dayDate = ui.dayDate === '${d}' ? '' : '${d}'; render()">
-        ${dt.toLocaleDateString(undefined, { weekday: "short" })}<b>${dt.getDate()}</b>
-      </button>`;
-    }).join("");
 
     const cards = days.map((date) => {
       const slots = state.slots.map((s, i) => {
@@ -727,7 +874,7 @@
           : `<button class="empty-slot" onclick="openSlot('${date}', ${i})">+ Add ${esc(s)}</button>`;
         return `<div class="meal-slot"><div class="slot-label">${esc(s)}</div>${body}</div>`;
       }).join("");
-      return `<div class="day-card ${date === today ? "is-today" : ""} ${date === ui.dayDate ? "sel" : ""}">
+      return `<div class="day-card ${date === today ? "is-today" : ""}">
         <div class="day-header">${pretty(date)}</div><div class="meal-slots">${slots}</div></div>`;
     }).join("");
 
@@ -736,12 +883,11 @@
         <button class="btn small" onclick="shiftWeek(-7)"><i class="fa-solid fa-chevron-left"></i> Prev</button>
         <strong>${pretty(days[0])} to ${pretty(days[6])}</strong>
         <button class="btn small" onclick="shiftWeek(7)">Next <i class="fa-solid fa-chevron-right"></i></button>
-        <button class="btn small" onclick="ui.weekStart = mondayOf(new Date()); render()">This week</button>
+        <button class="btn small" onclick="ui.weekStart = sundayOf(new Date()); render()">This week</button>
         <button class="btn small" onclick="copyWeek()"><i class="fa-regular fa-copy"></i> Copy to next week</button>
         <button class="btn small" onclick="openSlots()"><i class="fa-solid fa-gear"></i> Edit slots</button>
       </div>
-      <div class="day-strip">${strip}</div>
-      <div class="days-grid ${ui.dayDate ? "has-sel" : ""}">${cards}</div>`;
+      <div class="days-grid">${cards}</div>`;
   }
 
   function shiftWeek(n) {
@@ -763,34 +909,34 @@
   }
 
   /* Pick a saved meal for a slot (one-tap planning) */
-function openSlot(date, slotIndex) {
+  function openSlot(date, slotIndex) {
     const slot = state.slots[slotIndex];
     ui.target = { date: date, slot: slot };
     const current = (state.plan[date] || {})[slot];
 
-    const list = state.meals.map((m) => `
-      <button class="mrow" data-name="${esc(m.title.toLowerCase())}" onclick="pickMeal('${m.id}')">
+    const list = sorted(state.meals, "meals", "title").map((m) => `
+      <button class="mcard" data-name="${esc(m.title.toLowerCase())}" onclick="pickMeal('${m.id}')">
         ${pic(mealImg(m), '<i class="fa-solid fa-bowl-food"></i>')}
-        <div class="mtitle">${esc(m.title)}</div>
+        <div class="mbody"><div class="mtitle">${esc(m.title)}</div></div>
       </button>`).join("");
 
     openModal(`
-      <div class="modal-head">
-        <h3>${esc(slot)}, ${pretty(date)}</h3>
-        <button class="btn small" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
-      </div>
+      <h3>${esc(slot)}, ${pretty(date)}</h3>
       <div class="controls">
         <input class="field" id="mealFilter" placeholder="Filter your meals" oninput="filterMeals(this.value)">
         <button class="btn btn-primary small" onclick="openMealEditor(null, true)"><i class="fa-solid fa-plus"></i> New meal</button>
       </div>
-      <div class="mlist" id="mealPick">
+      <div class="grid tight" id="mealPick">
         ${list || '<p class="note">No saved meals yet. Create one with New meal, then reuse it anywhere.</p>'}
       </div>
-      ${current ? '<div class="acts"><button class="btn btn-danger small" onclick="clearSlot()">Leave empty</button></div>' : ""}`);
+      <div class="acts">
+        ${current ? '<button class="btn btn-danger small" onclick="clearSlot()">Leave empty</button>' : ""}
+        <button class="btn small" onclick="closeModal()">Close</button>
+      </div>`);
   }
 
   function filterMeals(q) {
-    document.querySelectorAll("#mealPick .mrow").forEach((el) => {
+    document.querySelectorAll("#mealPick .mcard").forEach((el) => {
       el.style.display = el.dataset.name.includes(q.toLowerCase()) ? "" : "none";
     });
   }
@@ -868,7 +1014,7 @@ function openSlot(date, slotIndex) {
 
   /* ---------- Meals library ---------- */
   function mealsView() {
-    const cards = sorted(state.meals, "meals", "title").map((m) => `
+        const cards = sorted(state.meals, "meals", "title").map((m) => `
       <div class="mcard">
         ${pic(mealImg(m), '<i class="fa-solid fa-bowl-food"></i>')}
         <div class="mbody">
@@ -885,7 +1031,7 @@ function openSlot(date, slotIndex) {
     return `
       <div class="controls">
         <h2 style="flex:1">My Meals</h2>
-        ${sortBtn("meals")}
+        ${sortBtn("meals")}		
         <button class="btn btn-primary" onclick="openMealEditor(null, false)"><i class="fa-solid fa-plus"></i> New meal</button>
       </div>
       <p class="note" style="margin-bottom:1rem">Build a meal once, then drop it into any slot with one tap. Without its own photo, a meal shows the first ingredient picture.</p>
@@ -989,8 +1135,8 @@ function openSlot(date, slotIndex) {
         <input class="field" id="newItems" placeholder="e.g. avocado, eggs, garri" onkeydown="if (event.key === 'Enter') addFromPantry()">
         <button class="btn btn-primary" onclick="addFromPantry()">Add</button>
         <button class="btn" onclick="openStarter()"><i class="fa-solid fa-earth-africa"></i> Starter foods</button>
-                ${sortBtn("pantry")}
-              </div>
+        ${sortBtn("pantry")}
+      </div>
       <div class="grid tight">${cards || '<p class="note">No ingredients yet.</p>'}</div>`;
   }
 
