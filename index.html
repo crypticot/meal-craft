@@ -7,7 +7,7 @@
 
 <meta name="description" content="MealCraft is a free personal meal planner. Build meals from your pantry, plan your week, and print or download your meal plan.">
 <link rel="canonical" href="https://crypticot.github.io/meal-craft/">
-<meta name="theme-color" content="#10b981">
+<meta name="theme-color" content="#0F3325">
 
 <!-- Open Graph -->
 <meta property="og:type" content="website">
@@ -131,16 +131,11 @@
     letter-spacing: -0.03em;
     color: var(--forest);
   }
-  .brand i {
+  .brand svg {
     width: 36px;
     height: 36px;
-    display: grid;
-    place-items: center;
-    border-radius: var(--r-s);
-    background: var(--forest);
-    color: var(--turmeric);
-    font-size: 0.95rem;
     box-shadow: 0 6px 14px rgba(15, 51, 37, 0.25);
+    border-radius: var(--r-s);
   }
   .navlinks {
     display: flex;
@@ -593,7 +588,16 @@
 <h1 class="sr-only">MealCraft: Personal Meal Planner</h1>
 
 <header>
-  <div class="brand"><i class="fa-solid fa-utensils"></i><span>MealCraft</span></div>
+  <div class="brand">
+    <svg viewBox="0 0 64 64" aria-hidden="true">
+      <rect width="64" height="64" rx="14" fill="#0F3325"/>
+      <g transform="translate(12 12) scale(1.667)" fill="none" stroke="#F2B53C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 3v6a2 2 0 0 0 4 0V3M8 3v18"/>
+        <path d="M17 21V3c-2.5 1.5-4 4.5-4 8h4"/>
+      </g>
+    </svg>
+    <span>MealCraft</span>
+  </div>
   <div class="navlinks">
     <button id="navHome" onclick="showPage('home')">Home</button>
     <button id="navKitchen" onclick="showPage('kitchen')">Kitchen</button>
